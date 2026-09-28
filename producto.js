@@ -227,3 +227,20 @@ async function init(){
 });
 
 init();   // arranca todo al abrir la página
+
+[
+    {
+        web: "", // 
+        codigo: "", // 
+        categoria: "", // 
+        producto: "", // 
+        pmayor: 123, // Numero o texto si el resultado es "null" o "0"
+        pmenor: 123, // Numero o texto si el resultado es "null" o "0"
+        promocion: "", // 
+        colores: [""], // Si el valor es "null" se coloca null
+        descripcion: "", // 
+        tipomedida: "", // Si el valor es "null" se coloca null
+        medidas: [""], // Si el valor es "null" se coloca null
+        img: "", // 
+    }
+]
