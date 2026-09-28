@@ -1,0 +1,29 @@
+:root{--bg:#f6f7f9;--card:#fff;--text:#1c1f26;--muted:#6b7280;--accent:#2563eb;--border:#e5e7eb}
+@media(prefers-color-scheme:dark){:root{--bg:#111318;--card:#1a1d25;--text:#eef0f4;--muted:#9aa1ae;--accent:#5b8cff;--border:#2a2e39}}
+*{box-sizing:border-box;margin:0}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
+header{padding:32px 20px 16px;max-width:1100px;margin:auto}
+h1{font-size:1.8rem}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+input,select{padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);font-size:1rem}
+input{flex:1;min-width:200px}
+main{max-width:1100px;margin:auto;padding:8px 20px 40px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+.card{position:relative;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.card.out{opacity:.6}
+.card img,.noimg{width:100%;aspect-ratio:1/1;object-fit:cover;background:var(--border)}
+.noimg{display:grid;place-items:center;color:var(--muted);font-size:.9rem}
+.tag{position:absolute;top:10px;left:10px;padding:3px 10px;border-radius:999px;font-size:.75rem;font-weight:600;color:#fff;background:#6b7280}
+.t-oferta,.t-rebajado{background:#ea580c}.t-nuevo{background:#16a34a}.t-top,.t-exclusivo{background:#7c3aed}
+.t-agotado{background:#dc2626}.t-limitado{background:#ca8a04}.t-stock{background:#2563eb}
+.body{padding:14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.cat{font-size:.75rem;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
+.name{font-weight:600}
+.code{font-size:.75rem;color:var(--muted)}
+.desc{font-size:.9rem;color:var(--muted)}
+.opts{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:.8rem;color:var(--muted)}
+.chip{border:1px solid var(--border);border-radius:999px;padding:2px 10px;color:var(--text)}
+.prices{margin-top:auto;padding-top:6px;display:flex;flex-direction:column;gap:2px}
+.menor{font-size:1.15rem;font-weight:700}
+.mayor{font-size:.85rem;color:var(--muted)}
+.msg{text-align:center;color:var(--muted);padding:40px 0}

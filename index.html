@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<title>Catálogo de productos</title>
+</head>
+<body>
+<header>
+  <h1>Catálogo de productos</h1>
+  <div class="tools">
+    <input id="q" type="search" placeholder="Buscar por nombre, código o descripción...">
+    <select id="cat"><option value="">Todas las categorías</option></select>
+    <select id="promo"><option value="">Todas las promociones</option></select>
+  </div>
+</header>
+<main>
+  <div id="grid" class="grid"></div>
+  <p id="msg" class="msg">Cargando productos...</p>
+</main>
+
+<script src="producto.js"></script>
+</body>
+</html>
