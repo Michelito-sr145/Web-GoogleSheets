@@ -66,14 +66,11 @@ function parseCSV(text) {
 
 //* ================= FORMATO DE DATOS ================= */
 // Convierte un precio argentino:
-// "$2.500,00" → 2500
-// "2500"      → 2500
-// "null"      → "null"
-// "0"         → "0"
+// "$2.500,00" → 2500 valor entero o null
 function convertirPrecio(valor) {
     valor = valor.trim();
-    if (valor === "null" || valor === "0" || valor === "") {
-        return valor || "null";
+    if (valor === "null" || valor === "0" || valor === "" || valor === "0,00" || valor === "$0,00") {
+        return valor = null;
     }
     const numero = Number(
         valor
@@ -85,43 +82,64 @@ function convertirPrecio(valor) {
 }
 
 // Convierte:
-// "Rojo, Azul, Negro" → ["Rojo", "Azul", "Negro"]
-// "null"              → null
+// "Rojo, Azul, Negro" puede estar los valores separados por ",;|-"→ ["Rojo", "Azul", "Negro"] o null
 function convertirLista(valor) {
     valor = valor.trim();
     if (valor === "null" || valor === "") {
         return null;
     }
     return valor
-        .split(/[,;|]/)
+        .split(/[,;|-]/)
         .map(x => x.trim())
         .filter(Boolean);
 }
 
+//* ================= DEFINIMOS EL ENCABEZADO O VARIABLE ================= */
+function definirEncabezados(rows) {
+    // Primera fila del CSV = encabezados
+    const encabezados = rows[0];
+    // Aquí guardaremos el nombre del encabezado y su posición
+    const indice = {};
+    encabezados.forEach((encabezado, posicion) => {
+        // Limpiamos espacios y pasamos a minúsculas
+        const nombre = encabezado.trim().toLowerCase();
+        indice[nombre] = posicion;
+    });
+    console.log("Encabezados:", encabezados);
+    console.log("Índice de encabezados:", indice);
+    return indice;
+}
+
 //* ================= CREAR LISTA ================= */
 function crearListaProductos(rows) {
-    // La primera fila contiene los encabezados
-    const encabezados = rows[0];
-    console.log("Encabezados:", encabezados);
+    // Definimos dónde se encuentra cada encabezado
+    const indice = definirEncabezados(rows);
     // Todas las filas después de los encabezados
     return rows.slice(1)
-        // Ignora filas que no tengan producto
-        .filter(fila => fila[3] && fila[3].trim() !== "")
-        .map(fila => {
-            return {
-                web: fila[0]?.trim() || "",
-                codigo: fila[1]?.trim() || "",
-                categoria: fila[2]?.trim() || "",
-                producto: fila[3]?.trim() || "",
-                pmayor: convertirPrecio(fila[4] || ""),
-                pmenor: convertirPrecio(fila[5] || ""),
-                promocion: fila[6]?.trim() || "",
-                colores: convertirLista(fila[7] || ""),
-                descripcion: fila[8]?.trim() === "null" ? null : fila[8]?.trim() || "",
-                tipomedida: fila[9]?.trim() === "null" ? null : fila[9]?.trim() || "",
-                medidas: convertirLista(fila[10] || ""),
-                img: fila[11]?.trim() === "null" ? "null" : fila[11]?.trim() || ""};
-        });
+    // Ignora filas que no tengan producto
+    .filter(fila =>
+        indice["producto"] !== undefined &&
+        fila[indice["producto"]] &&
+        fila[indice["producto"]].trim() !== ""
+    )
+    .map(fila => {
+        return {
+            web: fila[indice["web"]]?.trim() || "",
+            codigo: fila[indice["id"]]?.trim() || "",
+            categoria: fila[indice["categoria"]]?.trim() || "",
+            producto: fila[indice["producto"]]?.trim() || "",
+            pmayor: convertirPrecio(fila[indice["p.mayor"]] || ""),
+            pmenor: convertirPrecio(fila[indice["p.menor"]] || ""),
+            promocion: fila[indice["promocion"]]?.trim() || "",
+            colores: convertirLista(fila[indice["colores"]] || ""),
+            descripcion: fila[indice["descripcion"]]?.trim() === "null" ? null : fila[indice["descripcion"]]?.trim() || "",
+            tipomedida: fila[indice["tipomedida"]]?.trim() === "null" ? null : fila[indice["tipomedida"]]?.trim() || "",
+            medidas: convertirLista(fila[indice["medidas"]] || ""),
+            img: fila[indice["imagen"]]?.trim() === "null" ? "null" : fila[indice["imagen"]]?.trim() || "",
+            antpmayor: convertirPrecio(fila[indice["antpmayor"]] || ""),
+            antpmenor: convertirPrecio(fila[indice["antpmenor"]] || ""),
+        };
+    });
 }
 
 //* ================= CARGAR PRODUCTOS ================= */
