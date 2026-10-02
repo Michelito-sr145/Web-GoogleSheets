@@ -102,11 +102,9 @@ function definirEncabezados(rows) {
     const indice = {};
     encabezados.forEach((encabezado, posicion) => {
         // Limpiamos espacios y pasamos a minúsculas
-        const nombre = encabezado.trim().toLowerCase();
+        const nombre = encabezado.trim().toLowerCase().replace(/[^a-z0-9áéíóúñ]+/g, "_").replace(/^_+|_+$/g, "");   
         indice[nombre] = posicion;
     });
-    console.log("Encabezados:", encabezados);
-    console.log("Índice de encabezados:", indice);
     return indice;
 }
 
@@ -128,14 +126,13 @@ function crearListaProductos(rows) {
             codigo: fila[indice["id"]]?.trim() || "",
             categoria: fila[indice["categoria"]]?.trim() || "",
             producto: fila[indice["producto"]]?.trim() || "",
-            pmayor: convertirPrecio(fila[indice["p.mayor"]] || ""),
-            pmenor: convertirPrecio(fila[indice["p.menor"]] || ""),
+            pmayor: convertirPrecio(fila[indice["p_mayor"]] || ""),
+            pmenor: convertirPrecio(fila[indice["p_menor"]] || ""),
             promocion: fila[indice["promocion"]]?.trim() || "",
             colores: convertirLista(fila[indice["colores"]] || ""),
             descripcion: fila[indice["descripcion"]]?.trim() === "null" ? null : fila[indice["descripcion"]]?.trim() || "",
             tipomedida: fila[indice["tipomedida"]]?.trim() === "null" ? null : fila[indice["tipomedida"]]?.trim() || "",
             medidas: convertirLista(fila[indice["medidas"]] || ""),
-            img: fila[indice["imagen"]]?.trim() === "null" ? "null" : fila[indice["imagen"]]?.trim() || "",
             antpmayor: convertirPrecio(fila[indice["antpmayor"]] || ""),
             antpmenor: convertirPrecio(fila[indice["antpmenor"]] || ""),
         };
@@ -143,7 +140,7 @@ function crearListaProductos(rows) {
 }
 
 //* ================= CARGAR PRODUCTOS ================= */
-async function cargarProductos() {
+async function ObtenerProductos() {
     try {
         const respuesta = await fetch(CSV_URL);
         if (!respuesta.ok) {
@@ -152,15 +149,13 @@ async function cargarProductos() {
         const csv = await respuesta.text();
         const filas = parseCSV(csv);
         ListaProductos = crearListaProductos(filas);
-        console.log("ListaProductos:", ListaProductos);
-        console.log("Cantidad de productos:", ListaProductos.length);
+        return ListaProductos;
     }
     catch (error) {
-        console.error(
-            "Lo sentimos no se pudieron cargar los productos:",
-            error
-        );
+        console.error("Lo sentimos no se pudieron cargar los productos:", error);
     }
 }
+
+export { ListaProductos, ObtenerProductos };
 //* ================= INICIO ================= */
-cargarProductos();
+ObtenerProductos();
